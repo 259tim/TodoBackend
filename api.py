@@ -2,6 +2,7 @@ from flask_httpauth import HTTPBasicAuth
 from flask import request, abort, jsonify, url_for, g
 from models.userModel import db, login, User
 from app import app
+import time
 
 # https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
 # https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
@@ -47,10 +48,10 @@ def verify_password(email_or_token, password):
 
 @app.route('/time', methods=['GET'])
 def get_current_time():
-    return {'time': User.query.count()}
+    return {'time': time.time()}
 
 
-@app.route('/api/users', methods=['POST'])
+@app.route('/api/usercreate', methods=['POST'])
 def new_user():
     myRequest = request.get_json('email')
     email = myRequest.get('email')
@@ -58,14 +59,15 @@ def new_user():
     name = myRequest.get('name')
     print("hello:")
     print(email)
+    print(type(email))
 
     if email is None or password is None:
         print("abort1")
-        abort(400)  # missing arguments!
+        abort(400, "missing arguments")  # missing arguments!
 
     if User.query.filter_by(email=email).first() is not None:
         print("abort2")
-        abort(400)  # user exists
+        abort(400, "user_exists")  # user exists
 
     print("here")
     user = User(email=email, name=name)
@@ -83,9 +85,9 @@ def new_user():
 @auth.login_required
 def get_auth_token():
     token = g.user.generate_auth_token(10)
-    return jsonify({'token': token.decode('ascii'), 'duration': 10})
+    return jsonify({'token': token.decode('ascii'), 'duration': 120})
 
-# this is an example of a page that requires verification to enter 
+# this is an example of a page that requires verification to enter
 # the login_required refers back to the authentication library and calls the relevant
 # functions that were made in the user model.
 @app.route('/api/lockedaway') 

@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
 
     # this generates a token, expiration shows how many SECONDS it takes for it to expire
     # the secret key should, obviously, stay secret, might have to put it in local .env
-    # currently this is just a random string.
+    # currently this is just a string.
     def generate_auth_token(self, expiration = 120):
         s = Serializer(app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'id': self.id})
