@@ -1,19 +1,25 @@
-import time
-from flask import Flask, request, abort, jsonify, url_for
-from models.user import db, login, User
+from flask_httpauth import HTTPBasicAuth
+from flask import request, abort, jsonify, url_for, g
+from models.userModel import db, login, User
+from app import app
 
 # https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
+# https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
 # because the app is accessed through Expo/React Native
 # you have to host the application on your public network
 # the localhost does NOT work.
 # in app.run I put: host=192.168.178.11" <- check your local device IP
+# you can also do 'flask run --host IPHERE'
 #  this depends on your situation, and change accordingly
 # 'ipconfig' on Windows or `ip address`/`ifconfig` on Linux to check
+# to run this app you have to activate the virtual environment with 'source venv/bin/activate'
 
-app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'this key should be secure and replaced in production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quickscan.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+auth = HTTPBasicAuth()
 db.init_app(app)
 
 
@@ -26,6 +32,18 @@ login.init_app(app)
 
 
 # app.run(host='192.168.178.11', port=5000)
+
+@auth.verify_password
+def verify_password(email_or_token, password):
+    # first try to authenticate by token
+    user = User.verify_auth_token(email_or_token)
+    if not user:
+        # try to authenticate with email/password
+        user = User.query.filter_by(email = email_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+    g.user = user
+    return True
 
 @app.route('/time', methods=['GET'])
 def get_current_time():
@@ -55,3 +73,20 @@ def new_user():
     db.session.add(user)
     db.session.commit()
     return jsonify({'name': user.name})  #, 201, {'Location': url_for('get_user', id=user.id, _external=True)}
+
+# curl -u user:pw -i -X GET http://192.168.178.11:5000/api/lockedaway 
+# https://curl.trillworks.com/
+# this is password auth. Token auth is preferred.
+
+
+@app.route('/api/token')
+@auth.login_required
+def get_auth_token():
+    token = g.user.generate_auth_token(10)
+    return jsonify({'token': token.decode('ascii'), 'duration': 10})
+
+
+@app.route('/api/lockedaway') 
+@auth.login_required
+def get_lockedaway():
+    return jsonify({ 'data':'Hello, %s! this is secret!' % g.user.name})
