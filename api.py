@@ -85,7 +85,9 @@ def get_auth_token():
     token = g.user.generate_auth_token(10)
     return jsonify({'token': token.decode('ascii'), 'duration': 10})
 
-
+# this is an example of a page that requires verification to enter 
+# the login_required refers back to the authentication library and calls the relevant
+# functions that were made in the user model.
 @app.route('/api/lockedaway') 
 @auth.login_required
 def get_lockedaway():
