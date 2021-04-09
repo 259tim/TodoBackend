@@ -37,6 +37,7 @@ login.init_app(app)
 @auth.verify_password
 def verify_password(email_or_token, password):
     # first try to authenticate by token
+
     user = User.verify_auth_token(email_or_token)
     if not user:
         # try to authenticate with email/password
@@ -45,6 +46,12 @@ def verify_password(email_or_token, password):
             return False
     g.user = user
     return True
+
+@auth.error_handler
+def unauthorized():
+    response = jsonify({'message':'Failed'})
+    return response
+
 
 @app.route('/time', methods=['GET'])
 def get_current_time():
@@ -57,19 +64,15 @@ def new_user():
     email = myRequest.get('email')
     password = myRequest.get('password')
     name = myRequest.get('name')
-    print("hello:")
-    print(email)
-    print(type(email))
 
-    if email is None or password is None:
-        print("abort1")
-        abort(400, "missing arguments")  # missing arguments!
+    if email == "" or password == "" or name == "" or email is None or password is None or name is None:
+        print("abort_missing")
+        return jsonify(message= "Missing arguments")  # missing arguments!
 
     if User.query.filter_by(email=email).first() is not None:
-        print("abort2")
-        abort(400, "user_exists")  # user exists
+        print("abort_exists")
+        return jsonify(message= "User exists")  # user exists
 
-    print("here")
     user = User(email=email, name=name)
     user.set_password(password)
     db.session.add(user)
