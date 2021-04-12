@@ -1,8 +1,15 @@
 from flask_httpauth import HTTPBasicAuth
-from flask import request, abort, jsonify, url_for, g
-from models.userModel import db, login, User
+from flask import request, jsonify, g
+# from models.AnswerChoiceModel import AnswerChoice
+# from models.AnswerModel import Answer
+# from models.ChoiceModel import Choice
+# from models.ParticipationModel import Participation
+# from models.surveyModel import Survey
+# from models.SurveyQuestionModel import SurveyQuestion
+from models.userModel import User
 from app import app
 import time
+from db import db, login
 
 # https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
 # https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
@@ -79,7 +86,7 @@ def new_user():
     db.session.commit()
     return jsonify({'name': user.name})  #, 201, {'Location': url_for('get_user', id=user.id, _external=True)}
 
-# curl -u user:pw -i -X GET http://192.168.178.11:5000/api/lockedaway 
+# curl -u user:pw -i -X GET http://192.168.178.11:5000/api/lockedaway
 # https://curl.trillworks.com/
 # this is password auth. Token auth is preferred.
 
@@ -93,7 +100,7 @@ def get_auth_token():
 # this is an example of a page that requires verification to enter
 # the login_required refers back to the authentication library and calls the relevant
 # functions that were made in the user model.
-@app.route('/api/lockedaway') 
+@app.route('/api/lockedaway')
 @auth.login_required
 def get_lockedaway():
-    return jsonify({ 'data':'Hello, %s! this is secret!' % g.user.name})
+    return jsonify({'data': 'Hello, %s! this is secret!' % g.user.name})
