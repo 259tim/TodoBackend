@@ -4,10 +4,9 @@ from flask_login import UserMixin
 from flask_login import LoginManager
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
-from app import app
+from app import app, db
 
 login = LoginManager()
-db = SQLAlchemy()
 
 
 class User(UserMixin, db.Model):

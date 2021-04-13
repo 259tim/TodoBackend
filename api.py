@@ -1,15 +1,16 @@
 from flask_httpauth import HTTPBasicAuth
 from flask import request, jsonify, g
-# from models.AnswerChoiceModel import AnswerChoice
-# from models.AnswerModel import Answer
-# from models.ChoiceModel import Choice
-# from models.ParticipationModel import Participation
-# from models.surveyModel import Survey
-# from models.SurveyQuestionModel import SurveyQuestion
+from flask_login import LoginManager
+from models.AnswerChoiceModel import AnswerChoice
+from models.AnswerModel import Answer
+from models.ChoiceModel import Choice
+from models.ParticipationModel import Participation
+from models.QuestionModel import Question
+from models.surveyModel import Survey
+from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
-from app import app
+from app import app, db
 import time
-from db import db, login
 
 # https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
 # https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
@@ -28,11 +29,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quickscan.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 auth = HTTPBasicAuth()
-db.init_app(app)
+login = LoginManager()
 
+# initialize the app and database:
+# This makes sure the database system understands the flask app.
 
-@app.before_first_request
-def create_table():
+with app.app_context():
+    db.init_app(app)
     db.create_all()
 
 
