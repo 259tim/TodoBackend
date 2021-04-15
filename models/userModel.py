@@ -1,10 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask_login import LoginManager
 from itsdangerous import (TimedJSONWebSignatureSerializer
                           as Serializer, BadSignature, SignatureExpired)
-from app import app, db
+from app import app, db, ma
 
 login = LoginManager()
 
@@ -44,3 +43,7 @@ class User(UserMixin, db.Model):
             return None    # invalid token
         user = User.query.get(data['id'])
         return user
+
+class UserSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = User

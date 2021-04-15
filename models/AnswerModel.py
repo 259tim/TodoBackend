@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 
 
 class Answer(db.Model):
@@ -9,3 +9,8 @@ class Answer(db.Model):
     question_key = db.Column(db.ForeignKey('questions.id'))
     open_answer = db.Column(db.String())
     bool_answer = db.Column(db.Boolean())
+
+
+class AnswerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Answer

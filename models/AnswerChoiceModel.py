@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 
 
 class AnswerChoice(db.Model):
@@ -6,3 +6,8 @@ class AnswerChoice(db.Model):
 
     answer_key = db.Column(db.ForeignKey('answers.id'), primary_key=True)
     choice_key = db.Column(db.ForeignKey('choices.id'), primary_key=True)
+
+
+class AnswerChoiceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = AnswerChoice

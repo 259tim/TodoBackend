@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 
 
 class Question(db.Model):
@@ -12,3 +12,8 @@ class Question(db.Model):
     # 2: multiple choice, multiple answers (check boxes)
     # 3: open answer: string
     question_type = db.Column(db.Integer())
+
+
+class QuestionSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Question

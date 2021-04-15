@@ -1,4 +1,4 @@
-from app import db
+from app import db, ma
 
 
 class SurveyQuestion(db.Model):
@@ -12,3 +12,8 @@ class SurveyQuestion(db.Model):
     category_weight_three = db.Column(db.Integer)
     category_weight_four = db.Column(db.Integer)
     category_weight_five = db.Column(db.Integer)
+
+
+class SurveyQuestionSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = SurveyQuestion

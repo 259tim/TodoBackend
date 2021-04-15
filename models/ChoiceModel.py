@@ -1,5 +1,6 @@
 from app import db, ma
 
+
 class Choice(db.Model):
     __tablename__ = 'choices'
 
@@ -7,3 +8,7 @@ class Choice(db.Model):
     question_id = db.Column(db.ForeignKey('questions.id'))
     choice_text = db.Column(db.String())
 
+
+class ChoiceSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Choice
