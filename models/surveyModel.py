@@ -11,3 +11,7 @@ class Survey(db.Model):
 class SurveySchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Survey
+
+
+survey_schema = SurveySchema()
+surveys_schema = SurveySchema(many=True)

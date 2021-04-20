@@ -6,7 +6,7 @@ from models.AnswerModel import Answer
 from models.ChoiceModel import Choice
 from models.ParticipationModel import Participation
 from models.QuestionModel import Question
-from models.surveyModel import Survey, SurveySchema
+from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
 from app import app, db
@@ -43,80 +43,79 @@ with app.app_context():
 
     # add test user
     if User.query.filter_by(email="tim.seip@capgemini.com").first() is not None:
-        print("test user exists")
+        print("test user exists, not creating test dataset")
     else:
-        print("inserting test user")
+        print("inserting test datasetc")
         user = User(email="tim.seip@capgemini.com", name="admin")
         user.set_password("adminpw")
         db.session.add(user)
 
-    # add test survey
-    survey = Survey(survey_name="cookie survey")
+        # add test survey
+        survey = Survey(survey_name="cookie survey")
 
-    db.session.add(survey)
+        db.session.add(survey)
 
-    # add test questions
-    TQ1 = Question(question_type=0, question_text="Do you like cookies?")  # yes/no
-    TQ2 = Question(question_type=1, question_text="Choose your favourite flavour.")  # multiple choice one answer
-    TQ3 = Question(question_type=2, question_text="Choose all types of cookies that you enjoy.")  # multiple choice multiple answer
-    TQ4 = Question(question_type=3, question_text="Please describe how cookies make you feel.")  # open
+        # add test questions
+        TQ1 = Question(question_type=0, question_text="Do you like cookies?")  # yes/no
+        TQ2 = Question(question_type=1, question_text="Choose your favourite flavour.")  # multiple choice one answer
+        TQ3 = Question(question_type=2, question_text="Choose all types of cookies that you enjoy.")  # multiple choice multiple answer
+        TQ4 = Question(question_type=3, question_text="Please describe how cookies make you feel.")  # open
 
-    db.session.add(TQ1)
-    db.session.add(TQ2)
-    db.session.add(TQ3)
-    db.session.add(TQ4)
+        db.session.add(TQ1)
+        db.session.add(TQ2)
+        db.session.add(TQ3)
+        db.session.add(TQ4)
 
-    # link test questions to test survey
-    SQ1 = SurveyQuestion(question_id=1, survey_id=1, category_weight_one=1,
-    category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
-    SQ2 = SurveyQuestion(question_id=2, survey_id=1, category_weight_one=1,
-    category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
-    SQ3 = SurveyQuestion(question_id=3, survey_id=1, category_weight_one=1,
-    category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
-    SQ4 = SurveyQuestion(question_id=4, survey_id=1, category_weight_one=1,
-    category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
-    SQ5 = SurveyQuestion(question_id=5, survey_id=1, category_weight_one=1,
-    category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
+        # link test questions to test survey
+        SQ1 = SurveyQuestion(question_id=1, survey_id=1, category_weight_one=1,
+        category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
+        SQ2 = SurveyQuestion(question_id=2, survey_id=1, category_weight_one=1,
+        category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
+        SQ3 = SurveyQuestion(question_id=3, survey_id=1, category_weight_one=1,
+        category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
+        SQ4 = SurveyQuestion(question_id=4, survey_id=1, category_weight_one=1,
+        category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
+        SQ5 = SurveyQuestion(question_id=5, survey_id=1, category_weight_one=1,
+        category_weight_two=2, category_weight_three=3, category_weight_four=4, category_weight_five=5)
 
-    db.session.add(SQ1)
-    db.session.add(SQ2)
-    db.session.add(SQ3)
-    db.session.add(SQ4)
-    db.session.add(SQ5)
+        db.session.add(SQ1)
+        db.session.add(SQ2)
+        db.session.add(SQ3)
+        db.session.add(SQ4)
+        db.session.add(SQ5)
 
-    # give the multiple choice questions possible choices
-    C1 = Choice(question_id=2, choice_text="strawberry.")
-    C2 = Choice(question_id=2, choice_text="apple.")
-    C3 = Choice(question_id=2, choice_text="custard.")
-    C4 = Choice(question_id=3, choice_text="soft cookies.")
-    C5 = Choice(question_id=3, choice_text="hard cookies.")
-    C6 = Choice(question_id=3, choice_text="chocolate cookies.")
-    C7 = Choice(question_id=3, choice_text="british biscuits.")
-    C8 = Choice(question_id=3, choice_text="american chocolate chip.")
-    C9 = Choice(question_id=3, choice_text="cookies for tea.")
-    C10 = Choice(question_id=3, choice_text="cookies for coffee.")
-    C11 = Choice(question_id=3, choice_text="cookies for hot chocolate.")
-    C12 = Choice(question_id=3, choice_text="cookies for dessert.")
+        # give the multiple choice questions possible choices
+        C1 = Choice(question_id=2, choice_text="strawberry.")
+        C2 = Choice(question_id=2, choice_text="apple.")
+        C3 = Choice(question_id=2, choice_text="custard.")
+        C4 = Choice(question_id=3, choice_text="soft cookies.")
+        C5 = Choice(question_id=3, choice_text="hard cookies.")
+        C6 = Choice(question_id=3, choice_text="chocolate cookies.")
+        C7 = Choice(question_id=3, choice_text="british biscuits.")
+        C8 = Choice(question_id=3, choice_text="american chocolate chip.")
+        C9 = Choice(question_id=3, choice_text="cookies for tea.")
+        C10 = Choice(question_id=3, choice_text="cookies for coffee.")
+        C11 = Choice(question_id=3, choice_text="cookies for hot chocolate.")
+        C12 = Choice(question_id=3, choice_text="cookies for dessert.")
 
-    db.session.add(C1)
-    db.session.add(C2)
-    db.session.add(C3)
-    db.session.add(C4)
-    db.session.add(C5)
-    db.session.add(C6)
-    db.session.add(C7)
-    db.session.add(C8)
-    db.session.add(C9)
-    db.session.add(C10)
-    db.session.add(C11)
-    db.session.add(C12)
+        db.session.add(C1)
+        db.session.add(C2)
+        db.session.add(C3)
+        db.session.add(C4)
+        db.session.add(C5)
+        db.session.add(C6)
+        db.session.add(C7)
+        db.session.add(C8)
+        db.session.add(C9)
+        db.session.add(C10)
+        db.session.add(C11)
+        db.session.add(C12)
 
-    # commit all this to the DB
-    db.session.commit()
+        # commit all this to the DB
+        db.session.commit()
 
-    thing = SurveySchema()
-    thing = thing.dump(survey)
-    print(thing)
+
+        print(thing)
 
 # app.run(host='192.168.178.11', port=5000)
 
@@ -140,8 +139,6 @@ def unauthorized():
 
 
 # these are the API's routes, first we initialize the API
-
-
 
 
 # create a new user
@@ -170,6 +167,9 @@ def new_user():
 
 
 # get authentication token
+# this is an example of a page that requires verification to enter
+# the login_required refers back to the authentication library and calls the relevant
+# functions that were made in the user model.
 
 @app.route('/api/token')
 @auth.login_required
@@ -177,27 +177,34 @@ def get_auth_token():
     token = g.user.generate_auth_token(10)
     return jsonify({'token': token.decode('ascii'), 'duration': 120})
 
-# this is an example of a page that requires verification to enter
-# the login_required refers back to the authentication library and calls the relevant
-# functions that were made in the user model.
+# survey API section
 
-# get surveys
-
-@app.route('/api/survey')
+# get all surveys
+@app.route('/api/surveys')
 @auth.login_required
-def get_survey():
-    return jsonify({'data': 'Hello, %s! this is secret!' % g.user.name})
+def surveys():
+    all_surveys = Survey.query.all()
+    return surveys_schema.jsonify(all_surveys)
 
-# get questions
 
-@app.route('/api/lockedaway')
+# get a specific survey
+@app.route("/api/surveys/<id>", methods = ["GET"])
 @auth.login_required
-def get_lockedaway():
-    return jsonify({'data': 'Hello, %s! this is secret!' % g.user.name})
+def survey_detail(id):
 
-# get choices
+    survey = Survey.query.get(id)
+    return survey_schema.dump(survey)
 
-@app.route('/api/choices')
+
+# post a survey
+@app.route("/api/survey", methods=["POST"])
 @auth.login_required
-def get_choices():
-    return jsonify({'data': 'Hello, %s! this is secret!' % g.user.name})
+def add_survey():
+    req = request.get_json('survey_name')
+    print(req)
+    survey_name = req.get('survey_name')
+    print(survey_name)
+    new_survey = Survey(survey_name=survey_name)
+    db.session.add(new_survey)
+    db.session.commit()
+    return jsonify({'data': '%s has been added' % new_survey.survey_name})

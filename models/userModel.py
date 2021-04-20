@@ -44,6 +44,7 @@ class User(UserMixin, db.Model):
         user = User.query.get(data['id'])
         return user
 
+
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = User
