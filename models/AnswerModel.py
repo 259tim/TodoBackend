@@ -14,3 +14,7 @@ class Answer(db.Model):
 class AnswerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Answer
+
+
+answer_schema = AnswerSchema()
+answers_schema = AnswerSchema(many=True)

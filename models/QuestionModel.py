@@ -17,3 +17,7 @@ class Question(db.Model):
 class QuestionSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Question
+
+
+question_schema = QuestionSchema()
+questions_schema = QuestionSchema(many=True)

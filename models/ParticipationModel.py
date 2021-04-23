@@ -15,3 +15,7 @@ class Participation(db.Model):
 class ParticipationSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Participation
+
+
+participation_schema = ParticipationSchema()
+participations_schema = ParticipationSchema(many=True)

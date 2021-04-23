@@ -2,10 +2,10 @@ from flask_httpauth import HTTPBasicAuth
 from flask import request, jsonify, g
 from flask_login import LoginManager
 from models.AnswerChoiceModel import AnswerChoice
-from models.AnswerModel import Answer
+from models.AnswerModel import Answer, answer_schema, answers_schema
 from models.ChoiceModel import Choice
-from models.ParticipationModel import Participation
-from models.QuestionModel import Question
+from models.ParticipationModel import Participation, participation_schema, participations_schema
+from models.QuestionModel import Question, question_schema, questions_schema
 from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
@@ -22,8 +22,6 @@ from app import app, db
 #  this depends on your situation, and change accordingly
 # 'ipconfig' on Windows or `ip address`/`ifconfig` on Linux to check
 # to run this app you have to activate the virtual environment with 'source venv/bin/activate'
-
-
 
 
 auth = HTTPBasicAuth()
@@ -113,9 +111,7 @@ with app.app_context():
 
         # commit all this to the DB
         db.session.commit()
-
-
-        print(thing)
+        print("test dataset added")
 
 # app.run(host='192.168.178.11', port=5000)
 
@@ -134,7 +130,7 @@ def verify_password(email_or_token, password):
 
 @auth.error_handler
 def unauthorized():
-    response = jsonify({'message':'Failed'})
+    response = jsonify({'message':'login failed'})
     return response
 
 
@@ -156,7 +152,7 @@ def new_user():
 
     if User.query.filter_by(email=email).first() is not None:
         print("abort_exists")
-        return jsonify(message= "User exists")  # user exists
+        return jsonify(message="User exists")  # user exists
 
     user = User(email=email, name=name)
     user.set_password(password)
@@ -196,15 +192,46 @@ def survey_detail(id):
     return survey_schema.dump(survey)
 
 
-# post a survey
-@app.route("/api/survey", methods=["POST"])
+# participation API section
+
+# get all participations
+@app.route('/api/participations')
 @auth.login_required
-def add_survey():
-    req = request.get_json('survey_name')
-    print(req)
-    survey_name = req.get('survey_name')
-    print(survey_name)
-    new_survey = Survey(survey_name=survey_name)
-    db.session.add(new_survey)
+def participations():
+    all_participations = Participation.query.all()
+    return participations_schema.jsonify(all_participations)
+
+# post a participation
+@app.route("/api/participation", methods=["POST"])
+@auth.login_required
+def add_participation():
+    req = request.get_json('reference_key')
+    reference_key = req.get('reference_key')
+    user_id = req.get('user_id')
+    survey_id = req.get('survey_id')
+    
+    if reference_key == "" or user_id == "" or survey_id == "":
+        print("abort_missing_participation")
+        return jsonify(message= "Missing arguments")  # missing arguments!
+
+    new_participation = Participation(reference_key=reference_key, user_id=user_id, survey_id=survey_id)
+    db.session.add(new_participation)
     db.session.commit()
-    return jsonify({'data': '%s has been added' % new_survey.survey_name})
+    return jsonify({'message': "participation with key '%s' has been added" % new_participation.reference_key})
+
+# question API section
+
+# get all questions
+@app.route('/api/questions')
+@auth.login_required
+def questions():
+    all_questions = Question.query.all()
+    return questions_schema.jsonify(all_questions)
+
+
+# get a specific survey
+@app.route("/api/questions/<id>", methods = ["GET"])
+@auth.login_required
+def question_detail(id):
+    survey = Survey.query.get(id)
+    return survey_schema.dump(survey)
