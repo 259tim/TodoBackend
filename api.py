@@ -3,9 +3,8 @@ from flask import request, jsonify, g
 from flask_login import LoginManager
 from models.AnswerChoiceModel import AnswerChoice
 from models.AnswerModel import Answer, answer_schema, answers_schema
-from models.ChoiceModel import Choice
 from models.ParticipationModel import Participation, participation_schema, participations_schema
-from models.QuestionModel import Question, question_schema, questions_schema
+from models.QuestionModel import Question, question_schema, questions_schema, Choice, choice_schema, choices_schema
 from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
@@ -83,18 +82,18 @@ with app.app_context():
         db.session.add(SQ5)
 
         # give the multiple choice questions possible choices
-        C1 = Choice(question_id=2, choice_text="strawberry.")
-        C2 = Choice(question_id=2, choice_text="apple.")
-        C3 = Choice(question_id=2, choice_text="custard.")
-        C4 = Choice(question_id=3, choice_text="soft cookies.")
-        C5 = Choice(question_id=3, choice_text="hard cookies.")
-        C6 = Choice(question_id=3, choice_text="chocolate cookies.")
-        C7 = Choice(question_id=3, choice_text="british biscuits.")
-        C8 = Choice(question_id=3, choice_text="american chocolate chip.")
-        C9 = Choice(question_id=3, choice_text="cookies for tea.")
-        C10 = Choice(question_id=3, choice_text="cookies for coffee.")
-        C11 = Choice(question_id=3, choice_text="cookies for hot chocolate.")
-        C12 = Choice(question_id=3, choice_text="cookies for dessert.")
+        C1 = Choice(question=TQ2, choice_text="strawberry.")
+        C2 = Choice(question=TQ2, choice_text="apple.")
+        C3 = Choice(question=TQ2, choice_text="custard.")
+        C4 = Choice(question=TQ3, choice_text="soft cookies.")
+        C5 = Choice(question=TQ3, choice_text="hard cookies.")
+        C6 = Choice(question=TQ3, choice_text="chocolate cookies.")
+        C7 = Choice(question=TQ3, choice_text="british biscuits.")
+        C8 = Choice(question=TQ3, choice_text="american chocolate chip.")
+        C9 = Choice(question=TQ3, choice_text="cookies for tea.")
+        C10 = Choice(question=TQ3, choice_text="cookies for coffee.")
+        C11 = Choice(question=TQ3, choice_text="cookies for hot chocolate.")
+        C12 = Choice(question=TQ3, choice_text="cookies for dessert.")
 
         db.session.add(C1)
         db.session.add(C2)
@@ -229,7 +228,7 @@ def questions():
     return questions_schema.jsonify(all_questions)
 
 
-# get a specific survey
+# get a specific question
 @app.route("/api/questions/<id>", methods = ["GET"])
 @auth.login_required
 def question_detail(id):
