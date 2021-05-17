@@ -4,7 +4,7 @@ from flask_login import LoginManager
 from models.AnswerChoiceModel import AnswerChoice
 from models.AnswerModel import Answer, answer_schema, answers_schema
 from models.ParticipationModel import Participation, participation_schema, participations_schema
-from models.QuestionModel import Question, question_schema, questions_schema, Choice, choice_schema, choices_schema
+from models.question__and_choice_model import Question, question_schema, questions_schema, Choice, choice_schema, choices_schema
 from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
