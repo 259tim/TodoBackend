@@ -11,16 +11,14 @@ from models.userModel import User
 from app import app, db
 
 
-# https://blog.miguelgrinberg.com/post/restful-authentication-with-flask
-# https://medium.com/@stevenrmonaghan/password-reset-with-flask-mail-protocol-ddcdfc190968
+# to run this app you have to first activate the virtual environment with 'source venv/bin/activate'
+
 # because the app is accessed through Expo/React Native
-# you have to host the application on your public network
-# the localhost does NOT work.
-# in app.run I put: host=192.168.178.11" <- check your local device IP
-# you can also do 'flask run --host IPHERE'
-#  this depends on your situation, and change accordingly
-# 'ipconfig' on Windows or `ip address`/`ifconfig` on Linux to check
-# to run this app you have to activate the virtual environment with 'source venv/bin/activate'
+# you have to host the application on your public network, the localhost does NOT work.
+# do 'flask run --host IPHERE' > "flask run --host 192.168.178.11" <- check your local device IP
+# this depends on your situation, please change accordingly
+# 'ipconfig' on Windows or `ip address`/`ifconfig` on Linux to check your LOCAL! IP address.
+
 
 
 auth = HTTPBasicAuth()
