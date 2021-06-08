@@ -312,7 +312,7 @@ def add_participation():
     new_participation = Participation(reference_key=reference_key, user_id=user_id, survey_id=survey_id)
     db.session.add(new_participation)
     db.session.commit()
-    return jsonify({'message': "participation with key '%s' has been added" % new_participation.reference_key})
+    return jsonify({'new_participation_id': "%s" % new_participation.id})
 
 # question API section
 
@@ -330,3 +330,12 @@ def questions():
 def question_detail(id):
     survey = Survey.query.get(id)
     return survey_schema.dump(survey)
+
+# post the set of questions and answers
+@app.route('/api/question_post', methods=["POST"])
+@auth.login_required
+def add_question_set():
+    req = request.json()
+    print('req:')
+    print(req)
+    return jsonify({'hi':'hello'})

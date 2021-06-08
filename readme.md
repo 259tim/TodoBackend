@@ -30,6 +30,7 @@ Important: On many Linux-based operating systems Python version 2 and version 3 
 To set up a virtual environment you do the following:
 
 - First pull the project to your device. You're reading this documentation so you are already on the right Github page.
+- Install the virtual environment package with `sudo apt install python3-venv -y`
 - run `python –m venv virtual` to create a virtual environment.
 - start the virtual environment with `source venv/bin/activate` if it hasn't started yet.
 - now install all the relevant packages. The packages the project needs are contained in the `requirements.txt` so you do `pip install -r requirements.txt`.
