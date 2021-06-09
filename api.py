@@ -1,10 +1,9 @@
 from flask_httpauth import HTTPBasicAuth
 from flask import request, jsonify, g
 from flask_login import LoginManager
-from models.AnswerChoiceModel import AnswerChoice
+from models.question__and_choice_model import Question, question_schema, questions_schema, Choice, choice_schema, choices_schema
 from models.AnswerModel import Answer, answer_schema, answers_schema
 from models.ParticipationModel import Participation, participation_schema, participations_schema
-from models.question__and_choice_model import Question, question_schema, questions_schema, Choice, choice_schema, choices_schema
 from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
@@ -340,18 +339,41 @@ def add_question_set():
     nested = req.get('questions')  # get the nested data
     dictresult = json.loads(nested)  # convert into dict
 
-    id = dictresult['participation_id'] # now we can take what we want from it
-    questions = dictresult['questions']
+    participation_id = dictresult['participation_id'] # now we can take what we want from it
+    questions = dictresult['questions'] # in this case the set of returned questions
 
     for question in questions:
-        if question['question_type'] == 1:
-            print("type 1")
-            print(question)
-        elif question['question_type'] == 2:
-            print("type 2")
-            print(question)
-        elif question['question_type'] == 3:
-            print("type 3")
-            print(question)
+        if question['question_type'] == 0 or question['question_type'] == 3:
+            
+            print("yes/no or bool question being inserted:")
+            print (question['question_text'])
+            
+            dba = Answer(participation_key= participation_id, bool_answer=question['bool_choice'], open_answer=question['text_answer'], question_key=question['id'])
+            db.session.add(dba)
 
-    return jsonify({'hi':'hello'})
+        elif question['question_type'] == 1 or question['question_type'] == 2:
+
+            print("radio button or checkbox question being inserted:")
+            print (question['question_text'])
+            choices = question['choices'] # the choices that the current question allows
+            db.session.commit()
+
+            # here we create the object, but do NOT add it yet
+            # we do this so that we can query the right choice later. If we have the choice queried we can use that to make our many to many relationship
+            # if we try to query while already having added this object it means there is an open connection to the database, and we can not query anything
+            dba = Answer(participation_key= participation_id, bool_answer=question['bool_choice'],open_answer=question['text_answer'], question_key=question['id'])
+
+            for choice in choices:
+                if choice['chosen'] == 'checked':
+                    # get the relevant choice
+                    dbc = Choice.query.get(choice['id'])
+                    # add the answer object from earlier
+                    db.session.add(dba)
+                    # then we append the relevant choice and Flask turns this into an entry in our many to many table
+                    dba.choices.append(dbc)
+ 
+            
+    # commit everything
+    db.session.commit()
+
+    return jsonify({'message':'Succesfully inserted your results!'})

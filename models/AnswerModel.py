@@ -1,5 +1,11 @@
 from app import db, ma
 
+answer_choice_association = db.Table(
+    'answer_choice_association',
+    db.metadata,
+    db.Column('answer_id', db.Integer, db.ForeignKey('answers.id')),
+    db.Column('choice_id', db.Integer, db.ForeignKey('choices.id'))
+    )
 
 class Answer(db.Model):
     __tablename__ = 'answers'
@@ -9,6 +15,8 @@ class Answer(db.Model):
     question_key = db.Column(db.ForeignKey('questions.id'))
     open_answer = db.Column(db.String())
     bool_answer = db.Column(db.Boolean())
+    choices = db.relationship('Choice',
+    secondary= answer_choice_association)
 
 
 class AnswerSchema(ma.SQLAlchemyAutoSchema):
