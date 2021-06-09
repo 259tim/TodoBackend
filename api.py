@@ -9,6 +9,7 @@ from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
 from app import app, db
+import json
 
 
 # to run this app you have to first activate the virtual environment with 'source venv/bin/activate'
@@ -335,7 +336,22 @@ def question_detail(id):
 @app.route('/api/question_post', methods=["POST"])
 @auth.login_required
 def add_question_set():
-    req = request.json()
-    print('req:')
-    print(req)
+    req = request.get_json('whatever')  # get the data
+    nested = req.get('questions')  # get the nested data
+    dictresult = json.loads(nested)  # convert into dict
+
+    id = dictresult['participation_id'] # now we can take what we want from it
+    questions = dictresult['questions']
+
+    for question in questions:
+        if question['question_type'] == 1:
+            print("type 1")
+            print(question)
+        elif question['question_type'] == 2:
+            print("type 2")
+            print(question)
+        elif question['question_type'] == 3:
+            print("type 3")
+            print(question)
+
     return jsonify({'hi':'hello'})
