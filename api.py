@@ -10,7 +10,6 @@ from models.userModel import User
 from app import app, db
 import json
 
-
 # to run this app you have to first activate the virtual environment with 'source venv/bin/activate'
 
 # because the app is accessed through Expo/React Native
@@ -229,7 +228,13 @@ def unauthorized():
     return response
 
 
-# these are the API's routes, first we initialize the API
+# these are the API's routes
+
+# basic GET
+
+@app.route('/')
+def landing():
+    return "you are on the landing page"
 
 
 # create a new user
