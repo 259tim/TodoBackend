@@ -7,7 +7,8 @@ from models.ParticipationModel import Participation, participation_schema, parti
 from models.surveyModel import Survey, survey_schema, surveys_schema
 from models.SurveyQuestionModel import SurveyQuestion
 from models.userModel import User
-from app import app
+from pdfgen import generate_document
+from app import app, db
 from dbcreation import create_test_db
 import json
 
@@ -102,11 +103,6 @@ def get_auth_token():
     token = g.user.generate_auth_token(10)
     return jsonify({'token': token.decode('ascii'), 'duration': 120})
 
-# login route
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
 
 # survey API section
 
@@ -170,6 +166,15 @@ def questions():
 def question_detail(id):
     survey = Survey.query.get(id)
     return survey_schema.dump(survey)
+
+# get document
+
+# getting document to generate
+@app.route("/api/document/gen", methods = ["GET"])
+@auth.login_required
+def document_gen():
+    generate_document(1)
+    return jsonify({'message':'document generated!'})
 
 # post the set of questions and answers
 @app.route('/api/question_post', methods=["POST"])
